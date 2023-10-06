@@ -1,5 +1,5 @@
 /*
- * Implement your solution in thi file
+ * Implement your solution in this file
  *
  */
 
@@ -9,44 +9,55 @@
 
 #define MAX_LINE_LENGTH 1024
 
-// Function to read a single line from a file and return it as a dynamically allocated string.
-char* readString(FILE* file) {
-    char* line = NULL;
-    char buffer[MAX_LINE_LENGTH];
-    size_t len = 0;
+//read string function will take strings from the file
+char* readString(char* fileName){
 
-    if (fgets(buffer, sizeof(buffer), file) != NULL) {
-        len = strlen(buffer);
-
-        // Remove the newline character at the end of the line, if present.
-        if (len > 0 && buffer[len - 1] == '\n') {
-            buffer[len - 1] = '\0';
-            len--;
-        }
-
-        // Allocate memory for the line and copy it.
-        line = (char*)malloc(len + 1);
-        if (line != NULL) {
-            strcpy(line, buffer);
-        }
-    }
-
-    return line;
-}
-
-//Mystery explode function 
-char** mysteryExplode(const char* str, char delimiter, int* count) {
-    if (str == NULL || count == NULL) {
+    FILE* file = fopen(fileName, "r"); //f open will open the file in read mode ("r")
+    if(file == NULL){
+        perror("Error opening file"); //if file is not located it will print an error message
         return NULL;
     }
 
-    // Count the number of substrings (delimiter occurrences + 1).
-    *count = 1;
-    const char* ptr = str;
-    while (*ptr != '\0') {
-        if (*ptr == delimiter) {
-            (*count)++;
+    char* strings=(char*)malloc(sizeof(char)*100); // This allocates space for the string
+
+
+    if(strings != NULL){
+        if (fscanf(file, "%99[^\n]", strings)== 1){   //fscanf will scan the file an d create a new line at the end of the file
+            strings[99]='\0';
+        }else{ //This will only happen if the allocation of the string was unsuccessful
+            free(strings);  //This empties the contents of string
+            strings = NULL; //This sets the string to be NULL
         }
-        ptr++;
     }
+
+    fclose(file); //closes the file pointer and stops reading
+    return strings; //This will return the string that was read from the file
 }
+
+
+char* mysteryExplode(const char* str){ 
+    
+    int stringLength = strlen(str); //Find length of string
+    
+    int explodedLength = stringLength*(stringLength + 1)/2 +1; //Formula for lenth of exploded string
+   
+    char* exploded = (char*)malloc(explodedLength); //Allocation of memory for exploded string
+    if(exploded == NULL){
+        return NULL;
+    }
+    
+    char* start = exploded; //creates a pointer to the exploded string
+    //nested loop that will "explode" the string 
+    for(int a=0; a<stringLength; a++){ //Loop that goes through the string
+        
+        for(int b = 0; b<= a; b++){ //Loop that copies the character(s) with every iteration 
+            *start = str[b];
+            start++;
+        }
+    }
+    
+    *start = '\0';
+    
+    return exploded; // return exploded
+}
+

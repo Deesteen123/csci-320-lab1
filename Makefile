@@ -1,2 +1,10 @@
-explode: main.c lab1.c
-	gcc -o explode lab1.c main.c
+explode: main.o lab1.o
+	$(CC) -o $@ $?
+main.o: main.c
+	$(CC) -c $?
+lab1.o: lab1.c
+	$(CC) -c $?
+clean:
+	-rm -f *.o
+	@echo "All clean!"
+	
