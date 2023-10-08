@@ -18,12 +18,12 @@ char* readString(char* fileName){
         return NULL;
     }
 
-    char* strings=(char*)malloc(sizeof(char)*100); // This allocates space for the string
+    char* strings=(char*)malloc(sizeof(char)); // This allocates space for the string
 
 
     if(strings != NULL){
-        if (fscanf(file, "%99[^\n]", strings)== 1){   //fscanf will scan the file an d create a new line at the end of the file
-            strings[99]='\0';
+        if (fscanf(file, "%[^\n]", strings)== 1){   //fscanf will scan the file an d create a new line at the end of the file
+            strings[EOF]='\0';
         }else{ //This will only happen if the allocation of the string was unsuccessful
             free(strings);  //This empties the contents of string
             strings = NULL; //This sets the string to be NULL
